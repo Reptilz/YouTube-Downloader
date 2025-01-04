@@ -72,16 +72,16 @@
     - [x] Gérer les erreurs
 
 ## Fonctionnalités avancées
-- [ ] 1. Ajouter la gestion des erreurs
-  - [ ] Créer un composant de notification
-  - [ ] Implémenter les messages d'erreur
-  - [ ] Ajouter des toasts pour le feedback
+- [x] 1. Ajouter la gestion des erreurs
+  - [x] Créer un composant de notification
+  - [x] Implémenter les messages d'erreur
+  - [x] Ajouter des toasts pour le feedback
 
-- [ ] 2. Ajouter des fonctionnalités supplémentaires
-  - [ ] Choix de la qualité vidéo
-  - [ ] Choix du format (MP4/MP3)
-  - [ ] Prévisualisation des informations de la vidéo
-  - [ ] Barre de progression du téléchargement
+- [x] 2. Ajouter des fonctionnalités supplémentaires
+  - [x] Choix de la qualité vidéo
+  - [x] Choix du format (MP4/MP3)
+  - [x] Prévisualisation des informations de la vidéo
+  - [x] Barre de progression du téléchargement
 
 ## Tests
 - [ ] 1. Tests unitaires

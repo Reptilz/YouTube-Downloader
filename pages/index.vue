@@ -16,11 +16,6 @@
       :disabled="isLoading"
     />
 
-    <!-- Message d'erreur -->
-    <div v-if="error" class="mt-4 p-4 bg-red-50 text-red-600 rounded-md">
-      {{ error }}
-    </div>
-
     <!-- Affichage de la vidéo -->
     <div v-if="video" class="mt-8">
       <YoutubeVideoPlayer
@@ -45,6 +40,7 @@ import type { YoutubeVideo } from '~/types/youtube'
 import YoutubeUrlInput from '~/components/youtube/UrlInput.vue'
 import YoutubeVideoPlayer from '~/components/youtube/VideoPlayer.vue'
 import YoutubeDownloadButton from '~/components/youtube/DownloadButton.vue'
+import { useNotifications } from '~/composables/useNotifications'
 
 definePageMeta({
   layout: 'default'
@@ -52,12 +48,11 @@ definePageMeta({
 
 const video = ref<YoutubeVideo | null>(null)
 const isLoading = ref(false)
-const error = ref('')
+const { showSuccess, showError } = useNotifications()
 
 const handleUrlSubmit = async (url: string) => {
   try {
     isLoading.value = true
-    error.value = ''
     
     // Appel à l'API pour valider l'URL et obtenir les informations de la vidéo
     const response = await $fetch('/api/youtube/validate', {
@@ -66,8 +61,9 @@ const handleUrlSubmit = async (url: string) => {
     })
     
     video.value = response as YoutubeVideo
-  } catch (e) {
-    error.value = 'Erreur lors du chargement de la vidéo'
+    showSuccess('Vidéo chargée avec succès')
+  } catch (e: any) {
+    showError(e.message || 'Erreur lors du chargement de la vidéo')
     console.error(e)
   } finally {
     isLoading.value = false
@@ -79,7 +75,6 @@ const handleDownload = async (format: string) => {
   
   try {
     isLoading.value = true
-    error.value = ''
     
     // Appel à l'API pour télécharger la vidéo
     const response = await $fetch('/api/youtube/download', {
@@ -97,8 +92,10 @@ const handleDownload = async (format: string) => {
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
-  } catch (e) {
-    error.value = 'Erreur lors du téléchargement de la vidéo'
+    
+    showSuccess('Téléchargement démarré')
+  } catch (e: any) {
+    showError(e.message || 'Erreur lors du téléchargement de la vidéo')
     console.error(e)
   } finally {
     isLoading.value = false
