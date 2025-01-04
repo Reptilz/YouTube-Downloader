@@ -27,26 +27,26 @@
   - [x] Créer le dossier `types/`
 
 ## Développement Frontend
-- [ ] 1. Créer les composants de base
-  - [ ] Créer `components/layout/TheHeader.vue`
-  - [ ] Créer `components/layout/TheFooter.vue`
-  - [ ] Créer `layouts/default.vue`
+- [x] 1. Créer les composants de base
+  - [x] Créer `components/layout/TheHeader.vue`
+  - [x] Créer `components/layout/TheFooter.vue`
+  - [x] Créer `layouts/default.vue`
 
-- [ ] 2. Créer les composants fonctionnels
-  - [ ] Créer `components/youtube/UrlInput.vue`
-    - [ ] Ajouter le champ de saisie
-    - [ ] Ajouter la validation d'URL
-    - [ ] Styliser avec Tailwind
+- [x] 2. Créer les composants fonctionnels
+  - [x] Créer `components/youtube/UrlInput.vue`
+    - [x] Ajouter le champ de saisie
+    - [x] Ajouter la validation d'URL
+    - [x] Styliser avec Tailwind
   
-  - [ ] Créer `components/youtube/VideoPlayer.vue`
-    - [ ] Intégrer le lecteur YouTube
-    - [ ] Ajouter les contrôles de lecture
-    - [ ] Styliser avec Tailwind
+  - [x] Créer `components/youtube/VideoPlayer.vue`
+    - [x] Intégrer le lecteur YouTube
+    - [x] Ajouter les contrôles de lecture
+    - [x] Styliser avec Tailwind
   
-  - [ ] Créer `components/youtube/DownloadButton.vue`
-    - [ ] Créer le bouton de téléchargement
-    - [ ] Ajouter les états de chargement
-    - [ ] Styliser avec Tailwind
+  - [x] Créer `components/youtube/DownloadButton.vue`
+    - [x] Créer le bouton de téléchargement
+    - [x] Ajouter les états de chargement
+    - [x] Styliser avec Tailwind
 
 - [ ] 3. Créer la page principale
   - [ ] Créer `pages/index.vue`
