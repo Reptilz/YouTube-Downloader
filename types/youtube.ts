@@ -6,6 +6,9 @@ export interface VideoFormat {
   hasAudio: boolean
   hasVideo: boolean
   contentLength?: string
+  itag: number
+  mimeType: string
+  fps?: number
   url: string
 }
 

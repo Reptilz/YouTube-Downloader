@@ -73,7 +73,7 @@ const handleUrlSubmit = async (url: string) => {
   }
 }
 
-const handleDownload = async (format: string) => {
+const handleDownload = async (format: VideoFormat) => {
   if (!video.value) return
   
   try {
@@ -83,14 +83,14 @@ const handleDownload = async (format: string) => {
       method: 'GET',
       params: {
         url: video.value.url,
-        format
+        itag: format.itag
       }
     })
     
     // Créer un lien de téléchargement
     const link = document.createElement('a')
-    link.href = response.downloadUrl
-    link.download = `${video.value.title || 'video'}.${format}`
+    link.href = format.url // Utiliser directement l'URL du format
+    link.download = `${video.value.title || 'video'}.${format.format}`
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
