@@ -48,11 +48,11 @@
     - [x] Ajouter les états de chargement
     - [x] Styliser avec Tailwind
 
-- [ ] 3. Créer la page principale
-  - [ ] Créer `pages/index.vue`
-  - [ ] Intégrer tous les composants
-  - [ ] Ajouter la gestion d'état
-  - [ ] Styliser avec Tailwind
+- [x] 3. Créer la page principale
+  - [x] Créer `pages/index.vue`
+  - [x] Intégrer tous les composants
+  - [x] Ajouter la gestion d'état
+  - [x] Styliser avec Tailwind
 
 ## Développement Backend
 - [ ] 1. Créer les endpoints API
