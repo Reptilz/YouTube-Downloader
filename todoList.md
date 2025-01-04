@@ -55,21 +55,21 @@
   - [x] Styliser avec Tailwind
 
 ## Développement Backend
-- [ ] 1. Créer les endpoints API
-  - [ ] Créer `server/api/youtube/validate.post.ts`
-    - [ ] Implémenter la validation d'URL
-    - [ ] Gérer les erreurs
+- [x] 1. Créer les endpoints API
+  - [x] Créer `server/api/youtube/validate.post.ts`
+    - [x] Implémenter la validation d'URL
+    - [x] Gérer les erreurs
 
-  - [ ] Créer `server/api/youtube/info.get.ts`
-    - [ ] Récupérer les métadonnées de la vidéo
-    - [ ] Gérer les formats disponibles
-    - [ ] Gérer les erreurs
+  - [x] Créer `server/api/youtube/info.get.ts`
+    - [x] Récupérer les métadonnées de la vidéo
+    - [x] Gérer les formats disponibles
+    - [x] Gérer les erreurs
 
-  - [ ] Créer `server/api/youtube/download.get.ts`
-    - [ ] Implémenter le téléchargement
-    - [ ] Gérer les différents formats
-    - [ ] Gérer la progression
-    - [ ] Gérer les erreurs
+  - [x] Créer `server/api/youtube/download.get.ts`
+    - [x] Implémenter le téléchargement
+    - [x] Gérer les différents formats
+    - [x] Gérer la progression
+    - [x] Gérer les erreurs
 
 ## Fonctionnalités avancées
 - [ ] 1. Ajouter la gestion des erreurs
