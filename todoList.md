@@ -19,12 +19,12 @@
   - [x] `npm install @headlessui/vue` pour les composants UI
 
 ## Structure du projet
-- [ ] 1. Configurer les dossiers
-  - [ ] Créer le dossier `components/`
-  - [ ] Créer le dossier `pages/`
-  - [ ] Créer le dossier `server/`
-  - [ ] Créer le dossier `composables/`
-  - [ ] Créer le dossier `types/`
+- [x] 1. Configurer les dossiers
+  - [x] Créer le dossier `components/`
+  - [x] Créer le dossier `pages/`
+  - [x] Créer le dossier `server/`
+  - [x] Créer le dossier `composables/`
+  - [x] Créer le dossier `types/`
 
 ## Développement Frontend
 - [ ] 1. Créer les composants de base
