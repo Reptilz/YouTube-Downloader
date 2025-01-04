@@ -23,12 +23,15 @@ export default defineEventHandler(async (event: H3Event) => {
     }
 
     // Obtenir les informations de la vidéo
-    const info = await ytdl.getInfo(url)
+    const info = await ytdl.getBasicInfo(url)
     
     // Extraire les formats disponibles
-    const formats = info.formats.map(format => ({
+    const formats = ytdl.filterFormats(info.formats, 'videoandaudio').map(format => ({
       quality: format.qualityLabel || format.quality,
       format: format.container,
+      hasAudio: format.hasAudio,
+      hasVideo: format.hasVideo,
+      contentLength: format.contentLength,
       url: format.url
     }))
 
@@ -38,9 +41,13 @@ export default defineEventHandler(async (event: H3Event) => {
       videoId: info.videoDetails.videoId,
       title: info.videoDetails.title,
       thumbnail: info.videoDetails.thumbnails[0]?.url,
+      duration: info.videoDetails.lengthSeconds,
+      author: info.videoDetails.author.name,
       formats
     }
   } catch (error: any) {
+    console.error('YouTube validation error:', error)
+    
     throw createError({
       statusCode: error.statusCode || 500,
       message: error.message || 'An error occurred while processing the video'

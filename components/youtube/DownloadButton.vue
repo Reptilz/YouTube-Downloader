@@ -1,75 +1,83 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { ArrowDownTrayIcon } from '@heroicons/vue/24/solid'
-import type { YoutubeVideo } from '~/types/youtube'
+import { ref, computed } from 'vue'
+import type { YoutubeVideo, VideoFormat } from '~/types/youtube'
+import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
+import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 
 const props = defineProps<{
-  video?: YoutubeVideo
-  isLoading?: boolean
+  video: YoutubeVideo
+  isLoading: boolean
 }>()
-
-const selectedFormat = ref('')
-const downloadProgress = ref(0)
-const error = ref('')
 
 const emit = defineEmits<{
-  'download': [format: string]
+  download: [format: string]
 }>()
 
-const handleDownload = async () => {
-  if (!selectedFormat.value) {
-    error.value = 'Veuillez sélectionner un format'
-    return
-  }
+const selectedFormat = ref<VideoFormat | null>(null)
 
-  error.value = ''
-  emit('download', selectedFormat.value)
-}
+const sortedFormats = computed(() => {
+  return [...props.video.formats].sort((a, b) => {
+    const qualityA = parseInt(a.quality?.replace(/[^\d]/g, '') || '0')
+    const qualityB = parseInt(b.quality?.replace(/[^\d]/g, '') || '0')
+    return qualityB - qualityA
+  })
+})
 </script>
 
 <template>
-  <div class="w-full max-w-2xl mx-auto mt-6">
-    <div v-if="video?.formats?.length" class="space-y-4">
-      <div>
-        <label for="format" class="block text-sm font-medium text-gray-700">
-          Format de téléchargement
-        </label>
-        <select
-          id="format"
-          v-model="selectedFormat"
-          class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+  <div class="mt-4">
+    <Menu as="div" class="relative inline-block text-left w-full">
+      <div class="flex space-x-2">
+        <MenuButton
+          class="w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          :disabled="isLoading"
         >
-          <option value="">Sélectionnez un format</option>
-          <option
-            v-for="format in video.formats"
-            :key="format.url"
-            :value="format.format"
-          >
-            {{ format.quality }} - {{ format.format }}
-          </option>
-        </select>
+          <span v-if="selectedFormat">
+            {{ selectedFormat.quality }} ({{ selectedFormat.format }})
+          </span>
+          <span v-else>Sélectionner la qualité</span>
+          <ChevronDownIcon class="ml-2 -mr-1 h-5 w-5" aria-hidden="true" />
+        </MenuButton>
+
+        <button
+          @click="selectedFormat && emit('download', selectedFormat.format)"
+          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+          :disabled="!selectedFormat || isLoading"
+        >
+          <span v-if="isLoading">Chargement...</span>
+          <span v-else>Télécharger</span>
+        </button>
       </div>
 
-      <div v-if="error" class="text-sm text-red-600">
-        {{ error }}
-      </div>
-
-      <button
-        @click="handleDownload"
-        :disabled="isLoading || !selectedFormat"
-        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 w-full justify-center"
+      <transition
+        enter-active-class="transition ease-out duration-100"
+        enter-from-class="transform opacity-0 scale-95"
+        enter-to-class="transform opacity-100 scale-100"
+        leave-active-class="transition ease-in duration-75"
+        leave-from-class="transform opacity-100 scale-100"
+        leave-to-class="transform opacity-0 scale-95"
       >
-        <ArrowDownTrayIcon v-if="!isLoading" class="h-5 w-5 mr-2" />
-        <span v-if="isLoading">Téléchargement en cours...</span>
-        <span v-else>Télécharger</span>
-      </button>
-
-      <div v-if="downloadProgress > 0" class="w-full bg-gray-200 rounded-full h-2.5">
-        <div
-          class="bg-green-600 h-2.5 rounded-full"
-          :style="{ width: downloadProgress + '%' }"
-        ></div>
-      </div>
-    </div>
+        <MenuItems
+          class="origin-top-right absolute right-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+        >
+          <div class="py-1">
+            <MenuItem v-for="format in sortedFormats" :key="format.quality" v-slot="{ active }">
+              <button
+                @click="selectedFormat = format"
+                :class="[
+                  active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                  'block w-full text-left px-4 py-2 text-sm'
+                ]"
+              >
+                {{ format.quality }} ({{ format.format }})
+                <span v-if="format.contentLength" class="text-gray-500 ml-2">
+                  {{ (parseInt(format.contentLength) / (1024 * 1024)).toFixed(1) }} MB
+                </span>
+              </button>
+            </MenuItem>
+          </div>
+        </MenuItems>
+      </transition>
+    </Menu>
   </div>
 </template>

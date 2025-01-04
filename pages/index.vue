@@ -1,6 +1,6 @@
 <!-- Page d'accueil -->
 <template>
-  <div class="max-w-4xl mx-auto">
+  <div class="max-w-4xl mx-auto px-4 py-8">
     <div class="text-center mb-12">
       <h1 class="text-4xl font-bold text-gray-900 mb-4">
         YouTube Downloader
@@ -11,17 +11,21 @@
     </div>
 
     <!-- Formulaire d'URL -->
-    <YoutubeUrlInput
-      @submit="handleUrlSubmit"
-      :disabled="isLoading"
-    />
+    <div class="max-w-2xl mx-auto">
+      <YoutubeUrlInput
+        @submit="handleUrlSubmit"
+        :disabled="isLoading"
+      />
+    </div>
 
     <!-- Affichage de la vidéo -->
-    <div v-if="video" class="mt-8">
+    <div v-if="video" class="mt-8 max-w-2xl mx-auto">
       <YoutubeVideoPlayer
         :video-id="video.videoId"
         :thumbnail="video.thumbnail"
         :title="video.title"
+        :author="video.author"
+        :duration="video.duration"
       />
       
       <!-- Bouton de téléchargement -->
@@ -54,7 +58,6 @@ const handleUrlSubmit = async (url: string) => {
   try {
     isLoading.value = true
     
-    // Appel à l'API pour valider l'URL et obtenir les informations de la vidéo
     const response = await $fetch('/api/youtube/validate', {
       method: 'POST',
       body: { url }
@@ -76,7 +79,6 @@ const handleDownload = async (format: string) => {
   try {
     isLoading.value = true
     
-    // Appel à l'API pour télécharger la vidéo
     const response = await $fetch('/api/youtube/download', {
       method: 'GET',
       params: {

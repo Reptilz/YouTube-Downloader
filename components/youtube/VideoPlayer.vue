@@ -2,10 +2,19 @@
 import { computed } from 'vue'
 
 const props = defineProps<{
-  videoId?: string
+  videoId: string
   thumbnail?: string
-  title?: string
+  title: string
+  author: string
+  duration: string
 }>()
+
+const formatDuration = (seconds: string) => {
+  const duration = parseInt(seconds)
+  const minutes = Math.floor(duration / 60)
+  const remainingSeconds = duration % 60
+  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
+}
 
 const videoUrl = computed(() => {
   if (!props.videoId) return ''
@@ -14,32 +23,22 @@ const videoUrl = computed(() => {
 </script>
 
 <template>
-  <div class="w-full max-w-2xl mx-auto mt-8">
-    <div v-if="videoId" class="aspect-w-16 aspect-h-9">
+  <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+    <div class="relative w-full" style="padding-top: 56.25%">
       <iframe
         :src="videoUrl"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen
-        class="w-full h-full rounded-lg shadow-lg"
+        class="absolute top-0 left-0 w-full h-full"
       ></iframe>
     </div>
-    
-    <div v-else-if="thumbnail" class="relative aspect-w-16 aspect-h-9">
-      <img
-        :src="thumbnail"
-        :alt="title"
-        class="w-full h-full object-cover rounded-lg shadow-lg"
-      />
-      <div class="absolute inset-0 flex items-center justify-center">
-        <div class="bg-black bg-opacity-50 p-4 rounded-full">
-          <span class="text-white text-lg">Chargement...</span>
-        </div>
+    <div class="p-4">
+      <h2 class="text-xl font-semibold text-gray-900 mb-2">{{ title }}</h2>
+      <div class="flex items-center justify-between text-sm text-gray-600">
+        <span>{{ author }}</span>
+        <span>{{ formatDuration(duration) }}</span>
       </div>
     </div>
-
-    <h2 v-if="title" class="mt-4 text-xl font-semibold text-gray-900">
-      {{ title }}
-    </h2>
   </div>
 </template>
