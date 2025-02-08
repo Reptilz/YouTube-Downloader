@@ -4,9 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss'],
   nitro: {
-    output: {
-      dir: 'dist',
-      publicDir: 'dist'
-    }
-  }
+    preset: 'netlify',
+  },
+  ssr: true
 })
