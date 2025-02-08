@@ -8,22 +8,31 @@ import 'node:path';
 
 const validate_post = defineEventHandler(async (event) => {
   var _a, _b;
+  console.log("[API] D\xE9but de la validation de l'URL YouTube");
   try {
     const body = await readBody(event);
+    console.log("[API] Body re\xE7u:", body);
     const { url } = body;
     if (!url) {
+      console.log("[API] Erreur: URL manquante");
       throw createError({
         statusCode: 400,
-        message: "URL is required"
+        statusMessage: "URL is required",
+        data: { received: body }
       });
     }
+    console.log("[API] Validation de l'URL:", url);
     if (!yt_validate(url)) {
+      console.log("[API] Erreur: URL YouTube invalide");
       throw createError({
         statusCode: 400,
-        message: "Invalid YouTube URL"
+        statusMessage: "Invalid YouTube URL",
+        data: { url }
       });
     }
+    console.log("[API] R\xE9cup\xE9ration des informations de la vid\xE9o");
     const info = await video_info(url);
+    console.log("[API] Informations vid\xE9o r\xE9cup\xE9r\xE9es");
     const formats = info.format.filter((format) => {
       var _a2;
       return ((_a2 = format.mimeType) == null ? void 0 : _a2.includes("video")) && format.audioQuality !== null;
@@ -49,11 +58,14 @@ const validate_post = defineEventHandler(async (event) => {
       return getQualityNumber(b.quality) - getQualityNumber(a.quality);
     });
     if (formats.length === 0) {
+      console.log("[API] Erreur: Aucun format vid\xE9o disponible");
       throw createError({
-        statusCode: 400,
-        message: "No valid formats found for this video"
+        statusCode: 404,
+        statusMessage: "No video formats available",
+        data: { url }
       });
     }
+    console.log("[API] Formats disponibles:", formats.length);
     return {
       url,
       videoId: info.video_details.id || "",
@@ -64,18 +76,19 @@ const validate_post = defineEventHandler(async (event) => {
       formats
     };
   } catch (error) {
-    console.error("YouTube validation error:", error);
-    let errorMessage = "An error occurred while processing the video";
-    if (error.message.includes("private video")) {
-      errorMessage = "Cette vid\xE9o est priv\xE9e";
-    } else if (error.message.includes("not found")) {
-      errorMessage = "Cette vid\xE9o n'existe pas";
-    } else if (error.message.includes("copyright")) {
-      errorMessage = "Cette vid\xE9o n'est pas disponible pour des raisons de droits d'auteur";
+    console.error("[API] Erreur lors de la validation:", error);
+    if (error.message.includes("private video")) ; else if (error.message.includes("not found")) ; else if (error.message.includes("copyright")) ;
+    if (error.statusCode) {
+      throw error;
     }
     throw createError({
-      statusCode: error.statusCode || 500,
-      message: errorMessage
+      statusCode: 500,
+      statusMessage: "Internal Server Error",
+      data: {
+        message: error.message,
+        name: error.name,
+        stack: void 0
+      }
     });
   }
 });

@@ -5,9 +5,17 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/tailwindcss'],
   
   nitro: {
-    preset: 'netlify'
+    preset: 'netlify',
+    prerender: {
+      crawlLinks: true,
+      routes: ['/']
+    }
   },
-  
+
+  experimental: {
+    payloadExtraction: false
+  },
+
   app: {
     baseURL: '/',
     buildAssetsDir: '/_nuxt/',
