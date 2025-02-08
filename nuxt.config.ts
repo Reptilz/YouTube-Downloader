@@ -5,22 +5,12 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/tailwindcss'],
   
   nitro: {
-    preset: 'netlify',
-    logLevel: 'debug',
-    debug: true,
-    routeRules: {
-      '/api/**': {
-        cors: true,
-        headers: {
-          'Access-Control-Allow-Methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': '*'
-        }
-      }
-    }
+    preset: 'netlify'
   },
   
   app: {
+    baseURL: '/',
+    buildAssetsDir: '/_nuxt/',
     head: {
       title: 'YouTube Downloader',
       meta: [
@@ -28,12 +18,5 @@ export default defineNuxtConfig({
         { name: 'viewport', content: 'width=device-width, initial-scale=1' }
       ]
     }
-  },
-
-  runtimeConfig: {
-    public: {
-      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || ''
-    }
-  },
-  ssr: true
+  }
 })
