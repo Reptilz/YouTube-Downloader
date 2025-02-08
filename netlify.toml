@@ -5,16 +5,17 @@
 
 [build.environment]
   NODE_VERSION = "18"
+  NITRO_PRESET = "netlify"
 
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/server"
-  status = 200
+[functions]
+  directory = ".netlify/functions-internal"
+  node_bundler = "esbuild"
 
 [[redirects]]
   from = "/*"
   to = "/.netlify/functions/server"
   status = 200
+  force = true
 
 [[headers]]
   for = "/_nuxt/*"
