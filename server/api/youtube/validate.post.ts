@@ -3,27 +3,38 @@ import { video_info, yt_validate } from 'play-dl'
 import { H3Event } from 'h3'
 
 export default defineEventHandler(async (event: H3Event) => {
+  console.log('[API] Début de la validation de l\'URL YouTube')
+  
   try {
     const body = await readBody(event)
+    console.log('[API] Body reçu:', body)
+    
     const { url } = body
 
     if (!url) {
+      console.log('[API] Erreur: URL manquante')
       throw createError({
         statusCode: 400,
-        message: 'URL is required'
+        statusMessage: 'URL is required',
+        data: { received: body }
       })
     }
 
+    console.log('[API] Validation de l\'URL:', url)
     // Valider l'URL YouTube
     if (!yt_validate(url)) {
+      console.log('[API] Erreur: URL YouTube invalide')
       throw createError({
         statusCode: 400,
-        message: 'Invalid YouTube URL'
+        statusMessage: 'Invalid YouTube URL',
+        data: { url }
       })
     }
 
+    console.log('[API] Récupération des informations de la vidéo')
     // Obtenir les informations de la vidéo
     const info = await video_info(url)
+    console.log('[API] Informations vidéo récupérées')
     
     // Filtrer et formater les formats disponibles
     const formats = info.format
@@ -56,12 +67,16 @@ export default defineEventHandler(async (event: H3Event) => {
       })
 
     if (formats.length === 0) {
+      console.log('[API] Erreur: Aucun format vidéo disponible')
       throw createError({
-        statusCode: 400,
-        message: 'No valid formats found for this video'
+        statusCode: 404,
+        statusMessage: 'No video formats available',
+        data: { url }
       })
     }
 
+    console.log('[API] Formats disponibles:', formats.length)
+    
     // Retourner les informations de la vidéo
     return {
       url,
@@ -73,7 +88,7 @@ export default defineEventHandler(async (event: H3Event) => {
       formats
     }
   } catch (error: any) {
-    console.error('YouTube validation error:', error)
+    console.error('[API] Erreur lors de la validation:', error)
     
     let errorMessage = 'An error occurred while processing the video'
     if (error.message.includes('private video')) {
@@ -84,9 +99,20 @@ export default defineEventHandler(async (event: H3Event) => {
       errorMessage = 'Cette vidéo n\'est pas disponible pour des raisons de droits d\'auteur'
     }
     
+    // Si c'est déjà une erreur H3, la renvoyer
+    if (error.statusCode) {
+      throw error
+    }
+    
+    // Sinon, créer une nouvelle erreur avec plus de détails
     throw createError({
-      statusCode: error.statusCode || 500,
-      message: errorMessage
+      statusCode: 500,
+      statusMessage: 'Internal Server Error',
+      data: {
+        message: error.message,
+        name: error.name,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      }
     })
   }
 })
